@@ -1,0 +1,4 @@
+*.slg
+
+.venv
+__pycache__
