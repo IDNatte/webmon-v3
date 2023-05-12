@@ -1,0 +1,8 @@
+[log]
+path = "/var/log/"
+fileformat = "slg"
+filename_prefix_1 = "host"
+filename_prefix_2 = "timestamp"
+
+[reporter]
+url_link = "http://localhost:5000/upload"

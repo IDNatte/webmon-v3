@@ -11,11 +11,6 @@ class SystemProberThread(threading.Thread):
 
     def run(self):
         while not self.stop_event.is_set():
-            # sys_info = [
-            #     proc.info for proc in psutil.process_iter(["pid", "name", "username"])
-            # ]
-
-            # print(sys_info)
             with open(self.output, "ab") as sys_probed:
                 sys_info = [
                     proc.info
