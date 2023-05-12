@@ -1,5 +1,0 @@
-[log]
-path = '/var/log/'
-fileformat = 'slg'
-filename_prefix_1 = 'host'
-filename_prefix_2 = 'timestamp'

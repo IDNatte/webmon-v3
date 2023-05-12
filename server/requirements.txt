@@ -1,0 +1,6 @@
+flask
+SQLAlchemy
+msgpack
+Flask-Migrate
+Flask-SQLAlchemy
+Flask-Cors

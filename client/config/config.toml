@@ -1,8 +1,12 @@
+[app]
+app_log_path = "app_log/"
+
 [log]
-path = "/var/log/"
+path = "log/"
 fileformat = "slg"
 filename_prefix_1 = "host"
 filename_prefix_2 = "timestamp"
 
 [reporter]
 url_link = "http://localhost:5000/upload"
+token = "dev"
