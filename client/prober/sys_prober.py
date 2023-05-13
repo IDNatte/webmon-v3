@@ -18,7 +18,6 @@ class SystemProberThread(threading.Thread):
 
     def run(self):
         network = psutil.net_io_counters(pernic=True)
-        addr_prober = psutil.net_if_addrs()
         with open(os.path.join(self.output_dir, self.output_file), "wb") as sys_probed:
             payload = {
                 "probe_time": f"{datetime.datetime.now()}",
@@ -30,7 +29,7 @@ class SystemProberThread(threading.Thread):
                             "transfer": network.get(net).bytes_sent,
                             "ip_addr": [
                                 net.address
-                                for net in addr_prober.get(net)
+                                for net in psutil.net_if_addrs().get(net)
                                 if net.family == socket.AF_INET
                             ][0],
                         }
