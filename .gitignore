@@ -1,12 +1,16 @@
 *.slg
 
 .venv
+.server
+.client
+
 __pycache__
 config.toml
 *.log
 
 requirements-dev.txt
 config
+test.*
 
 # pyinstaller
 build

@@ -88,7 +88,7 @@ def main():
             try:
                 if check:
                     try:
-                        time.sleep(60)
+                        time.sleep(5)
                         job_run(logger, base_path)
 
                     except KeyboardInterrupt:
