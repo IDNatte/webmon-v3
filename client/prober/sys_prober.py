@@ -41,6 +41,7 @@ class SystemProberThread(threading.Thread):
                     "app_net_usage": [
                         {
                             "proc_name": psutil.Process(conn.pid).name(),
+                            "pid": conn.pid,
                             "status": conn.status,
                             "address": {
                                 "local_address": conn.laddr[0],

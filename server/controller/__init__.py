@@ -33,4 +33,17 @@ def testing():
 
 @main.route("/")
 def index():
-    return render_template("index.html")
+    testing = sorted(
+        os.listdir(os.path.join(current_app.config.get("UPLOAD_FOLDER"))), reverse=True
+    )
+    try:
+        with open(
+            os.path.join(current_app.config.get("UPLOAD_FOLDER"), testing[0]), "rb"
+        ) as test:
+            raw_content = test.read()
+
+            content = msgpack.unpackb(raw_content)
+        return render_template("template/admin/index.html", content=content)
+
+    except IndexError:
+        return render_template("template/admin/index.html")
