@@ -6,3 +6,4 @@ config.toml
 *.log
 
 requirements-dev.txt
+config
