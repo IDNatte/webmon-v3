@@ -1,11 +1,42 @@
+import subprocess
 import threading
+import platform
 import datetime
 import msgpack
 import psutil
 import socket
 import os
+import re
 
-# running only on linux with systemd
+
+class JournalProber:
+    def __init__(self):
+        pass
+
+    def run(self):
+        prober = subprocess.run(
+            ["journalctl", "-n", "10", "-o", "short-iso"],
+            capture_output=True,
+            text=True,
+        )
+        entries = prober.stdout.strip().split("\n")
+        regex_entry = re.compile(r"(\S+) (\S+) (\S+); (\S+) (\S+): (.*)$")
+        entry_dict = []
+
+        for entry in entries:
+            match = regex_entry.match(entry)
+            if match:
+                fields = match.groups()
+                entry_dict = {
+                    "timestamp": fields[0] + "T" + fields[1] + "Z",
+                    "hostname": fields[2],
+                    "daemon": fields[3],
+                    "process": fields[4],
+                    "message": fields[5],
+                }
+                entry_dict.append(entry_dict)
+
+        return entry_dict
 
 
 class SystemProberThread(threading.Thread):
@@ -21,6 +52,13 @@ class SystemProberThread(threading.Thread):
     def run(self):
         network = psutil.net_io_counters(pernic=True)
         with open(os.path.join(self.output_dir, self.output_file), "wb") as sys_probed:
+            # running only if linux
+            if platform.system() == "linux":
+                linux_payload = JournalProber().run()
+
+            else:
+                linux_payload = []
+
             payload = {
                 "probe_time": f"{datetime.datetime.now()}",
                 "system_info": {
@@ -71,6 +109,7 @@ class SystemProberThread(threading.Thread):
                         for proc in psutil.process_iter(["pid", "name", "username"])
                     ],
                 },
+                "journal_info": linux_payload,
             }
             packed = msgpack.packb(payload)
             sys_probed.write(packed)
