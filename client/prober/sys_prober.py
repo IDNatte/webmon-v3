@@ -23,7 +23,7 @@ class SystemProberThread(threading.Thread):
         network = psutil.net_io_counters(pernic=True)
         with open(os.path.join(self.output_dir, self.output_file), "wb") as sys_probed:
             # running only if linux
-            if platform.system() == "linux":
+            if platform.system() == "Linux":
                 journal_prober = subprocess.run(
                     ["journalctl", "-n", "20", "-o", "json"],
                     capture_output=True,
