@@ -5,38 +5,8 @@ import datetime
 import msgpack
 import psutil
 import socket
+import json
 import os
-import re
-
-
-class JournalProber:
-    def __init__(self):
-        pass
-
-    def run(self):
-        prober = subprocess.run(
-            ["journalctl", "-n", "10", "-o", "short-iso"],
-            capture_output=True,
-            text=True,
-        )
-        entries = prober.stdout.strip().split("\n")
-        regex_entry = re.compile(r"(\S+) (\S+) (\S+); (\S+) (\S+): (.*)$")
-        entry_dict = []
-
-        for entry in entries:
-            match = regex_entry.match(entry)
-            if match:
-                fields = match.groups()
-                entry_dict = {
-                    "timestamp": fields[0] + "T" + fields[1] + "Z",
-                    "hostname": fields[2],
-                    "daemon": fields[3],
-                    "process": fields[4],
-                    "message": fields[5],
-                }
-                entry_dict.append(entry_dict)
-
-        return entry_dict
 
 
 class SystemProberThread(threading.Thread):
@@ -54,10 +24,17 @@ class SystemProberThread(threading.Thread):
         with open(os.path.join(self.output_dir, self.output_file), "wb") as sys_probed:
             # running only if linux
             if platform.system() == "linux":
-                linux_payload = JournalProber().run()
+                journal_prober = subprocess.run(
+                    ["journalctl", "-n", "20", "-o", "json"],
+                    capture_output=True,
+                    text=True,
+                )
+
+                probe_result = journal_prober.stdout.strip().split("\n")
+                journal = [json.loads(jour_prober) for jour_prober in probe_result]
 
             else:
-                linux_payload = []
+                journal = []
 
             payload = {
                 "probe_time": f"{datetime.datetime.now()}",
@@ -109,7 +86,7 @@ class SystemProberThread(threading.Thread):
                         for proc in psutil.process_iter(["pid", "name", "username"])
                     ],
                 },
-                "journal_info": linux_payload,
+                "journal_info": journal,
             }
             packed = msgpack.packb(payload)
             sys_probed.write(packed)
