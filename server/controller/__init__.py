@@ -8,9 +8,16 @@ import os
 
 from flask_cors import CORS
 
+from helper.filter.datetime_filter import datetime_costume_filter
+
 main = Blueprint("main", __name__)
 
 CORS(main)
+
+
+@main.app_template_filter("datetime_convert")
+def datetime_converter(s):
+    return datetime_costume_filter(s)
 
 
 @main.route("/test")

@@ -5,6 +5,8 @@ import psutil
 import socket
 import os
 
+# running only on linux with systemd
+
 
 class SystemProberThread(threading.Thread):
     def __init__(self, output_dir, output_file):
