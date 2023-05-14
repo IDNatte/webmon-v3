@@ -128,28 +128,120 @@
               </div>
             </div>
           </div> -->
-          <!-- End Customers Card -->
 
+          <!-- System info -->
           <div class="col-12">
             <div class="card recent-sales overflow-auto">
               <div class="card-body">
                 <h5 class="card-title">System Info</h5>
-                <div class="col-xxl-4 col-md-6">
-                  <div class="card info-card sales-card">
-                    <div class="card-body">
-                      <h5 class="card-title">Server</h5>
+                <div class="col-12">
+                  <div class="row">
+                    <!-- webmon -->
+                    <div class="col-xxl-6 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Webmon</h5>
 
-                      <div class="d-flex align-items-center">
-                        <div
-                          class="card-icon rounded-circle d-flex align-items-center justify-content-center"
-                        >
-                          <i class="bi bi-server"></i>
+                          <div class="d-flex align-items-center">
+                            <div
+                              class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                            >
+                              <i class="bi bi-braces"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>Webmon v.3.0</h6>
+                              <span class="text-muted small pt-2 ps-1">
+                                <span class="text-muted small d-block"
+                                  >Web server Monitoring version 3.0</span
+                                >
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <div class="ps-3">
-                          <h6>{{content.system_info.hostname}}</h6>
-                          <span class="text-muted small pt-2 ps-1">
-                            {{content.probe_time | datetime_convert}}
-                          </span>
+                      </div>
+                    </div>
+
+                    <!-- Server -->
+                    <div class="col-xxl-6 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Server</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div
+                              class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                            >
+                              <i class="bi bi-server"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>{{content.system_info.hostname}}</h6>
+                              <span class="text-muted small pt-2 ps-1">
+                                <span
+                                  class="text-success small pt-1 fw-bold d-block"
+                                  >{{content.probe_time |
+                                  datetime_convert}}</span
+                                >
+                                <span class="text-muted small d-block"
+                                  >(Probe time using server timezone)</span
+                                >
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- network -->
+                    <div class="col-md-12">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Network</h5>
+
+                          <div class="d-flex align-items-center">
+                            <div
+                              class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                            >
+                              <i class="bi bi-hdd-network"></i>
+                            </div>
+                            <div class="ps-3 w-100">
+                              <div class="d-flex mw-100">
+                                <div class="table-responsive w-100">
+                                  <table class="table table-borderless">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">interface</th>
+                                        <th scope="col">address</th>
+                                        <th scope="col">transfer</th>
+                                        <th scope="col">recive</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for network in
+                                      content.system_info.net_info %}
+                                      <tr>
+                                        <td>{{network.interface}}</td>
+                                        <td>{{network.ip_addr}}</td>
+
+                                        <td>
+                                          <span class="badge bg-success"
+                                            >{{network.transfer |
+                                            readable_bytes}}</span
+                                          >
+                                        </td>
+                                        <td>
+                                          <span class="badge bg-danger"
+                                            >{{network.receive |
+                                            readable_bytes}}</span
+                                          >
+                                        </td>
+                                      </tr>
+                                      {% endfor%}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -159,7 +251,7 @@
             </div>
           </div>
 
-          <!-- Recent Sales -->
+          <!-- Running application -->
           <div class="col-12">
             <div class="card recent-sales overflow-auto">
               <div class="card-body">
@@ -188,9 +280,8 @@
               </div>
             </div>
           </div>
-          <!-- End Recent Sales -->
 
-          <!-- Top Selling -->
+          <!-- Application network info -->
           <div class="col-12">
             <div class="card recent-sales overflow-auto">
               <div class="card-body">
@@ -219,13 +310,29 @@
               </div>
             </div>
           </div>
-          <!-- End Top Selling -->
+
+          <!-- System wide log -->
+          <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+              <div class="card-body">
+                <h5 class="card-title">System Log</h5>
+                <div class="col-md-12">
+                  <div class="row">
+                    {% for jmsg in content.journal_info %}
+                    <span
+                      >message : {{jmsg.MESSAGE}} run command :
+                      {{jmsg._CMDLINE}}</span
+                    >
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- End Left side columns -->
     </div>
-
-    <span>{{content.probe_time}}</span>
   </section>
 </main>
 <!-- End #main -->

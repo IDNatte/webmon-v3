@@ -9,6 +9,7 @@ import os
 from flask_cors import CORS
 
 from helper.filter.datetime_filter import datetime_costume_filter
+from helper.filter.bites_readable import format_bytes
 
 main = Blueprint("main", __name__)
 
@@ -18,6 +19,11 @@ CORS(main)
 @main.app_template_filter("datetime_convert")
 def datetime_converter(s):
     return datetime_costume_filter(s)
+
+
+@main.app_template_filter("readable_bytes")
+def bytes_humanizer(s):
+    return format_bytes(s)
 
 
 @main.route("/test")
@@ -36,6 +42,11 @@ def testing():
 
     except IndexError:
         return jsonify({"content": None})
+
+
+@main.route("/error_test")
+def error_test():
+    return render_template("template/error/index.html")
 
 
 @main.route("/")
