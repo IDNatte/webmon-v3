@@ -49,6 +49,11 @@ def error_test():
     return render_template("template/error/index.html")
 
 
+@main.route("/login")
+def login():
+    return render_template("template/login/index.html")
+
+
 @main.route("/")
 def index():
     testing = sorted(
