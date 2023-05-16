@@ -1,4 +1,4 @@
-class AuthError(Exception):
+class AuthApiError(Exception):
     """
     Authentication error
 

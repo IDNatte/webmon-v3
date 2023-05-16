@@ -1,4 +1,4 @@
-from helper.error.auth_error import AuthError
+from helper.error.auth_error import AuthApiError
 import datetime
 
 
@@ -20,6 +20,6 @@ def auth_header_parser(headers):
         if len(parser) == 2:
             return parser[1]
         else:
-            raise AuthError("TOKENError", "Missing token", 401)
+            raise AuthApiError("TOKENError", "Missing token", 401)
     else:
-        raise AuthError("TOKENError", "Broken Authorization header", 401)
+        raise AuthApiError("TOKENError", "Broken Authorization header", 401)

@@ -1,14 +1,17 @@
 from flask import render_template
-from flask import Blueprint
-from flask import jsonify
-
 from flask import current_app
+from flask import Blueprint
+from flask import redirect
+from flask import jsonify
+from flask import request
 import msgpack
 import os
 
 from flask_cors import CORS
 
 from helper.filter.datetime_filter import datetime_costume_filter
+from helper.security.password_module import create_password
+from helper.security.password_module import check_passwd
 from helper.filter.bites_readable import format_bytes
 
 from model import User
@@ -51,9 +54,23 @@ def error_test():
     return render_template("template/error/index.html")
 
 
-@main.route("/login")
+@main.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("template/login/index.html")
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        account_checker = User.query.filter_by(username=username).first()
+
+        if account_checker and check_passwd(account_checker.password, password) == True:
+            print("coba")
+            return render_template("template/login/index.html")
+
+        else:
+            error = "Invalid username or password"
+            return render_template("template/login/index.html", error=error)
+    else:
+        return render_template("template/login/index.html")
 
 
 @main.route("/")

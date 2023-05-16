@@ -2,7 +2,7 @@ from flask import request
 from functools import wraps
 
 from helper.utils import auth_header_parser
-from helper.error.auth_error import AuthApiError
+from helper.error import auth_error
 from model import User
 
 
@@ -23,9 +23,11 @@ def verify_token(function):
                 return function(*args, **kwargs)
 
             else:
-                raise AuthApiError("TOKENInvalid", "Token key not match", 401)
+                raise auth_error.AuthError("TOKENInvalid", "Token key not match", 401)
 
         except KeyError:
-            raise AuthApiError("TOKENError", "Authorization Header Missing", 401)
+            raise auth_error.AuthError(
+                "TOKENError", "Authorization Header Missing", 401
+            )
 
     return verify_auth_token
