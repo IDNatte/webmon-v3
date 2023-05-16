@@ -20,6 +20,6 @@ def auth_header_parser(headers):
         if len(parser) == 2:
             return parser[1]
         else:
-            raise AuthError("JWTError", "Missing jwt token", 401)
+            raise AuthError("TOKENError", "Missing token", 401)
     else:
-        raise AuthError("JWTError", "Broken Authorization header", 401)
+        raise AuthError("TOKENError", "Broken Authorization header", 401)

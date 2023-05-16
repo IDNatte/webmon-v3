@@ -8,6 +8,7 @@ from controller.api import upload_api
 from controller.api import error_api
 
 from helper.constant import DB
+from model import User
 
 
 def init_app(test_config=None):
@@ -16,7 +17,7 @@ def init_app(test_config=None):
 
     # database initializer
     DB.init_app(app)
-    Migrate().init_app(app=app, db=DB)
+    Migrate(app, db=DB).init_app(app, db=DB)
 
     # API entrypoint
     app.register_blueprint(upload_api.upload_endpoint)

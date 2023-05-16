@@ -8,10 +8,7 @@ import secrets
 
 def random_id_generator():
     return "".join(
-        (
-            random.choice(string.ascii_letters + string.digits + string.punctuation)
-            for x in range(50)
-        )
+        (random.choice(string.ascii_letters + string.digits) for x in range(50))
     )
 
 

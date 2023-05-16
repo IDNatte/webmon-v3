@@ -3,7 +3,7 @@
   "SQLALCHEMY_TRACK_MODIFICATIONS": false,
   "UPLOAD_FOLDER": "./public",
   "MAX_CONTENT_LENGTH": 109951162777600,
-  "SQLALCHEMY_DATABASE_URI": "sqlite:///database.db",
+  "SQLALCHEMY_DATABASE_URI": "mysql+pymysql://admin:admin123@localhost/webmon",
   "ALLOWED_EXTENSIONS": [
     "slg"
   ]

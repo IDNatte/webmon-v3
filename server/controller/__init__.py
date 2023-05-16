@@ -11,6 +11,8 @@ from flask_cors import CORS
 from helper.filter.datetime_filter import datetime_costume_filter
 from helper.filter.bites_readable import format_bytes
 
+from model import User
+
 main = Blueprint("main", __name__)
 
 CORS(main)
@@ -56,17 +58,18 @@ def login():
 
 @main.route("/")
 def index():
-    testing = sorted(
+    users = User.query.all()
+    log_data = sorted(
         os.listdir(os.path.join(current_app.config.get("UPLOAD_FOLDER"))), reverse=True
     )
     try:
         with open(
-            os.path.join(current_app.config.get("UPLOAD_FOLDER"), testing[0]), "rb"
+            os.path.join(current_app.config.get("UPLOAD_FOLDER"), log_data[0]), "rb"
         ) as test:
             raw_content = test.read()
 
             content = msgpack.unpackb(raw_content)
-        return render_template("template/admin/index.html", content=content)
+        return render_template("template/admin/index.html", content=content, user=users)
 
     except IndexError:
-        return render_template("template/admin/index.html")
+        return render_template("template/admin/index.html", user=users)

@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %} {% block content %}
+{% extends 'base/base.html' %} {% block content %} {% if content %}
 <main id="main" class="main">
   <div class="pagetitle">
     <h1>Dashboard</h1>
@@ -16,120 +16,6 @@
       <!-- Left side columns -->
       <div class="col-lg-12">
         <div class="row">
-          <!-- Sales Card -->
-          <!-- <div class="col-xxl-4 col-md-6">
-            <div class="card info-card sales-card">
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"
-                  ><i class="bi bi-three-dots"></i
-                ></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <h5 class="card-title">Sales <span>| Today</span></h5>
-
-                <div class="d-flex align-items-center">
-                  <div
-                    class="card-icon rounded-circle d-flex align-items-center justify-content-center"
-                  >
-                    <i class="bi bi-cart"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6>145</h6>
-                    <span class="text-success small pt-1 fw-bold">12%</span>
-                    <span class="text-muted small pt-2 ps-1">increase</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <!-- End Sales Card -->
-
-          <!-- Revenue Card -->
-          <!-- <div class="col-xxl-4 col-md-6">
-            <div class="card info-card revenue-card">
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"
-                  ><i class="bi bi-three-dots"></i
-                ></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <h5 class="card-title">Revenue <span>| This Month</span></h5>
-
-                <div class="d-flex align-items-center">
-                  <div
-                    class="card-icon rounded-circle d-flex align-items-center justify-content-center"
-                  >
-                    <i class="bi bi-currency-dollar"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6>$3,264</h6>
-                    <span class="text-success small pt-1 fw-bold">8%</span>
-                    <span class="text-muted small pt-2 ps-1">increase</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <!-- End Revenue Card -->
-
-          <!-- Customers Card -->
-          <!-- <div class="col-xxl-4 col-xl-12">
-            <div class="card info-card customers-card">
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"
-                  ><i class="bi bi-three-dots"></i
-                ></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <h5 class="card-title">Customers <span>| This Year</span></h5>
-
-                <div class="d-flex align-items-center">
-                  <div
-                    class="card-icon rounded-circle d-flex align-items-center justify-content-center"
-                  >
-                    <i class="bi bi-people"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6>1244</h6>
-                    <span class="text-danger small pt-1 fw-bold">12%</span>
-                    <span class="text-muted small pt-2 ps-1">decrease</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- System info -->
           <div class="col-12">
             <div class="card recent-sales overflow-auto">
               <div class="card-body">
@@ -318,12 +204,14 @@
                 <h5 class="card-title">System Log</h5>
                 <div class="col-md-12">
                   <div class="row">
-                    {% for jmsg in content.journal_info %}
-                    <span
-                      >message : {{jmsg.MESSAGE}} run command :
-                      {{jmsg._CMDLINE}}</span
-                    >
-                    {% endfor %}
+                    <pre>
+                      {% for jmsg in content.journal_info  %}
+                      Timestamp : {{jmsg.SYSLOG_TIMESTAMP}}
+                      Run command :{{jmsg._CMDLINE}}
+                      Message : {{jmsg.MESSAGE}}
+                      Exe File : {{jmsg._EXE}}
+                      {% endfor %}
+                    </pre>
                   </div>
                 </div>
               </div>
@@ -335,6 +223,108 @@
     </div>
   </section>
 </main>
+
+{% else %}
+
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item active">Dashboard</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section dashboard">
+    <div class="row">
+      <!-- Left side columns -->
+      <div class="col-lg-12">
+        <div class="row">
+          <!-- Running application -->
+          <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+              <div class="card-body">
+                <h5 class="card-title">No report</h5>
+                <div class="col-12">
+                  <div class="text-center">
+                    <h4 class="text-danger">
+                      No log report accepted from client !
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Left side columns -->
+    </div>
+  </section>
+</main>
+
+{% endif %}
+
+<div class="modal-component">
+  <div class="modal fade" id="verticalycentered" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Account information</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-borderless">
+            <thead>
+              <tr>
+                <th scope="col">Username</th>
+                <th class="text-center" scope="col">Application token</th>
+                <th class="text-center" scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for usr in user%}
+              <tr>
+                <td class="text-capitalize">{{usr.username}}</td>
+                <td id="copytoken" class="text-center">{{usr.token}}</td>
+                <td class="text-center">
+                  <button
+                    class="btn"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Copy Token"
+                    data-bs-placement="bottom"
+                    data-clipboard-target="#copytoken"
+                  >
+                    <i class="bi bi-clipboard-plus"></i>
+                  </button>
+                </td>
+              </tr>
+              {% endfor%}
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- End #main -->
 
 <!-- Vendor JS Files -->

@@ -14,7 +14,7 @@ from flask_cors import CORS
 from helper.validator.file_validator import file_validator
 from helper.utils import file_renamer
 
-from helper.middleware.jwt_validator import verify_jwt
+from helper.middleware.token_validator import verify_token
 
 upload_endpoint = Blueprint("upload_api", __name__)
 
@@ -22,7 +22,7 @@ CORS(upload_endpoint)
 
 
 @upload_endpoint.route("/upload", methods=["POST"])
-@verify_jwt
+@verify_token
 def file_upload():
     try:
         fileup = request.files["file"]

@@ -8,7 +8,7 @@ class User(DB.Model):
     __tablename__ = "webmon_user"
 
     id = DB.Column(
-        DB.String, primary_key=True, nullable=False, default=random_id_generator
+        DB.String(200), primary_key=True, nullable=False, default=random_id_generator
     )
     username = DB.Column(DB.String(50), nullable=False)
     password = DB.Column(DB.String(200), nullable=False, unique=True)
