@@ -4,14 +4,17 @@ from flask import Blueprint
 from flask import redirect
 from flask import jsonify
 from flask import request
+from flask import session
+from flask import url_for
 import msgpack
 import os
 
 from flask_cors import CORS
 
-from helper.filter.datetime_filter import datetime_costume_filter
-from helper.security.password_module import create_password
+from helper.middleware.login_validator import login_required
 from helper.security.password_module import check_passwd
+
+from helper.filter.datetime_filter import datetime_costume_filter
 from helper.filter.bites_readable import format_bytes
 
 from model import User
@@ -31,27 +34,27 @@ def bytes_humanizer(s):
     return format_bytes(s)
 
 
-@main.route("/test")
-def testing():
-    testing = sorted(
-        os.listdir(os.path.join(current_app.config.get("UPLOAD_FOLDER"))), reverse=True
-    )
-    try:
-        with open(
-            os.path.join(current_app.config.get("UPLOAD_FOLDER"), testing[0]), "rb"
-        ) as test:
-            raw_content = test.read()
+# @main.route("/test")
+# def testing():
+#     testing = sorted(
+#         os.listdir(os.path.join(current_app.config.get("UPLOAD_FOLDER"))), reverse=True
+#     )
+#     try:
+#         with open(
+#             os.path.join(current_app.config.get("UPLOAD_FOLDER"), testing[0]), "rb"
+#         ) as test:
+#             raw_content = test.read()
 
-            content = msgpack.unpackb(raw_content)
-        return jsonify(content)
+#             content = msgpack.unpackb(raw_content)
+#         return jsonify(content)
 
-    except IndexError:
-        return jsonify({"content": None})
+#     except IndexError:
+#         return jsonify({"content": None})
 
 
-@main.route("/error_test")
-def error_test():
-    return render_template("template/error/index.html")
+# @main.route("/error_test")
+# def error_test():
+#     return render_template("template/error/index.html")
 
 
 @main.route("/login", methods=["GET", "POST"])
@@ -63,8 +66,8 @@ def login():
         account_checker = User.query.filter_by(username=username).first()
 
         if account_checker and check_passwd(account_checker.password, password) == True:
-            print("coba")
-            return render_template("template/login/index.html")
+            session["wid"] = str(account_checker.id)
+            return redirect("/")
 
         else:
             error = "Invalid username or password"
@@ -74,7 +77,8 @@ def login():
 
 
 @main.route("/")
-def index():
+@login_required
+def index(account):
     users = User.query.all()
     log_data = sorted(
         os.listdir(os.path.join(current_app.config.get("UPLOAD_FOLDER"))), reverse=True
@@ -86,7 +90,16 @@ def index():
             raw_content = test.read()
 
             content = msgpack.unpackb(raw_content)
-        return render_template("template/admin/index.html", content=content, user=users)
+        return render_template(
+            "template/admin/index.html", account=account, content=content, user=users
+        )
 
-    except IndexError:
-        return render_template("template/admin/index.html", user=users)
+    except (IndexError, msgpack.exceptions.ExtraData, msgpack.exceptions.FormatError):
+        return render_template("template/admin/index.html", account=account, user=users)
+
+
+@main.route("/logout")
+@login_required
+def logout(_):
+    session.pop("wid", None)
+    return redirect(url_for("main.login"))
