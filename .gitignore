@@ -9,7 +9,6 @@ config.toml
 *.log
 
 requirements-dev.txt
-config
 test.*
 
 # pyinstaller
