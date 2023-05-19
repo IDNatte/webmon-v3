@@ -14,7 +14,11 @@ def login_required(function):
         if "wid" in session:
             user_data = User.query.get(session.get("wid"))
             return function(
-                {"username": user_data.username, "token": user_data.token},
+                {
+                    "username": user_data.username,
+                    "token": user_data.token,
+                    "storage": user_data.storage_medium,
+                },
                 *args,
                 **kwargs
             )

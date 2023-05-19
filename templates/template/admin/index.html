@@ -143,7 +143,7 @@
               <div class="card-body">
                 <h5 class="card-title">Running Application</h5>
 
-                <table class="table table-borderless">
+                <table class="table table-borderless datatable">
                   <thead>
                     <tr>
                       <th scope="col">pid</th>
@@ -173,7 +173,7 @@
               <div class="card-body">
                 <h5 class="card-title">Application Network info</h5>
 
-                <table class="table table-borderless">
+                <table class="table table-borderless datatable">
                   <thead>
                     <tr>
                       <th scope="col">pid</th>
@@ -204,14 +204,28 @@
                 <h5 class="card-title">System Log</h5>
                 <div class="col-md-12">
                   <div class="row">
-                    <pre>
-                      {% for jmsg in content.journal_info  %}
-                      Timestamp : {{jmsg.SYSLOG_TIMESTAMP}}
-                      Run command :{{jmsg._CMDLINE}}
-                      Message : {{jmsg.MESSAGE}}
-                      Exe File : {{jmsg._EXE}}
-                      {% endfor %}
-                    </pre>
+                    <table class="table table-borderless datatable">
+                      <thead>
+                        <tr>
+                          <th scope="col">Timestamp</th>
+                          <th scope="col">Run Command</th>
+                          <th scope="col">Message</th>
+                          <th scope="col">Exe File</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for jmsg in content.journal_info %}
+                        <tr>
+                          <td>{{jmsg.SYSLOG_TIMESTAMP}}</td>
+                          <td>{{jmsg._CMDLINE}}</td>
+                          <td>{{jmsg.MESSAGE}}</td>
+                          <td>{{jmsg._EXE}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+
+                    <pre></pre>
                   </div>
                 </div>
               </div>
@@ -281,44 +295,27 @@
           ></button>
         </div>
         <div class="modal-body">
-          <table class="table table-borderless">
+          <table class="table table-borderless datatable">
             <thead>
               <tr>
                 <th scope="col">Username</th>
                 <th class="text-center" scope="col">Application token</th>
-                <th class="text-center" scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
               {% for usr in user%}
               <tr>
                 <td class="text-capitalize">{{usr.username}}</td>
-                <td id="copytoken" class="text-center">{{usr.token}}</td>
-                <td class="text-center">
-                  <button
-                    class="btn"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="Copy Token"
-                    data-bs-placement="bottom"
-                    data-clipboard-target="#copytoken"
-                  >
-                    <i class="bi bi-clipboard-plus"></i>
-                  </button>
-                </td>
+                <td id="{{usr.username}}" class="text-center">{{usr.token}}</td>
               </tr>
               {% endfor%}
             </tbody>
           </table>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button data-bs-dismiss="modal" type="button" class="btn btn-primary">
             Close
           </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -339,12 +336,11 @@
           ></button>
         </div>
         <div class="modal-body">
-          <table class="table table-borderless">
+          <table class="table table-borderless datatable">
             <thead>
               <tr>
-                <th scope="col">Username</th>
-                <th class="text-center" scope="col">Application token</th>
-                <th class="text-center" scope="col">Action</th>
+                <th scope="col">Hostname</th>
+                <th class="text-center" scope="col">Uploaded time</th>
               </tr>
             </thead>
             <tbody>
@@ -354,24 +350,17 @@
                   class="text-capitalize text-truncate"
                   style="max-width: 70px"
                   data-bs-toggle="tooltip"
-                  data-bs-title="log for {{log|logname_readable}}"
+                  data-bs-title="log for {{log.filename|logname_readable}}"
                   data-bs-placement="bottom"
                 >
-                  <a href="/log_history/{{log|logfile_url_maker}}">
-                    {{log|logname_readable}}
+                  <a href="/log_history/{{log.id}}">
+                    {{log.filename|logname_readable}}
                   </a>
                 </td>
-                <td id="copytoken" class="text-center">history</td>
                 <td class="text-center">
-                  <button
-                    class="btn"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="Copy Token"
-                    data-bs-placement="bottom"
-                    data-clipboard-target="#copytoken"
+                  <span class="badge bg-success"
+                    >{{log.uploaded.strftime('%a, %B %d %Y @ %H:%M:%S')}}</span
                   >
-                    <i class="bi bi-clipboard-plus"></i>
-                  </button>
                 </td>
               </tr>
               {% endfor%} {% endif %}
@@ -379,14 +368,9 @@
           </table>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button data-bs-dismiss="modal" type="button" class="btn btn-primary">
             Close
           </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>

@@ -26,7 +26,11 @@ def auth_header_parser(headers):
 
 
 def filename_reverse(string):
+    first_part = list(string)[:8]
+    second_part = list(string)[8:]
+    joined_string = "".join(first_part, second_part)
     # print(list(string)[:8])
     # print(list(string)[8:])
+    print(f"{joined_string}")
 
     return {"testing": True}

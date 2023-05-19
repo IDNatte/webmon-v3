@@ -15,6 +15,9 @@ from helper.middleware.token_validator import verify_token
 from helper.validator.file_validator import file_validator
 from helper.utils import file_renamer
 
+from helper.constant import DB
+from model import ReportLog
+from model import User
 
 upload_endpoint = Blueprint("upload_api", __name__)
 
@@ -23,7 +26,8 @@ CORS(upload_endpoint)
 
 @upload_endpoint.route("/upload", methods=["POST"])
 @verify_token
-def file_upload(token):
+def file_upload(account):
+    print(account)
     try:
         fileup = request.files["file"]
 
@@ -34,7 +38,8 @@ def file_upload(token):
             filename = secure_filename(file_renamer(fileup.filename))
             reporter_account_folder = os.path.isdir(
                 os.path.join(
-                    os.path.abspath(current_app.config["UPLOAD_FOLDER"]), token
+                    os.path.abspath(current_app.config["UPLOAD_FOLDER"]),
+                    account.get("storage"),
                 )
             )
 
@@ -42,7 +47,7 @@ def file_upload(token):
                 fileup.save(
                     os.path.join(
                         os.path.abspath(current_app.config["UPLOAD_FOLDER"]),
-                        token,
+                        account.get("storage"),
                         filename,
                     )
                 )
@@ -50,17 +55,23 @@ def file_upload(token):
             else:
                 os.mkdir(
                     os.path.join(
-                        os.path.abspath(current_app.config["UPLOAD_FOLDER"]), token
+                        os.path.abspath(current_app.config["UPLOAD_FOLDER"]),
+                        account.get("storage"),
                     )
                 )
 
                 fileup.save(
                     os.path.join(
                         os.path.abspath(current_app.config["UPLOAD_FOLDER"]),
-                        token,
+                        account.get("storage"),
                         filename,
                     )
                 )
+
+            user = User.query.filter_by(token=account.get("token")).first()
+            report_log = ReportLog(filename=filename, owner=user.id)
+            DB.session.add(report_log)
+            DB.session.commit()
 
             return jsonify({"saved": True, "time": datetime.datetime.now()})
 

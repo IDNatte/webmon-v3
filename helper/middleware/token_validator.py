@@ -20,7 +20,15 @@ def verify_token(function):
             validator = User.query.filter_by(token=token).first()
 
             if validator:
-                return function(validator.token, *args, **kwargs)
+                return function(
+                    {
+                        "token": validator.token,
+                        "user": validator.username,
+                        "storage": validator.storage_medium,
+                    },
+                    *args,
+                    **kwargs
+                )
 
             else:
                 raise AuthApiError("TOKENInvalid", "Token key not match", 401)

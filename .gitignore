@@ -11,6 +11,8 @@ config.toml
 requirements-dev.txt
 test.*
 
+storage/
+
 # pyinstaller
 build
 dist

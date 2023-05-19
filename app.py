@@ -6,13 +6,18 @@ from getpass import getpass
 import click
 import json
 
+# web module
+from controller import web_error
 from controller import main
+
+# api module
 from controller.api import upload_api
 from controller.api import error_api
 
+# database stuff module
 from helper.security.password_module import create_password
-
 from helper.constant import DB
+from model import ReportLog
 from model import User
 
 
@@ -46,15 +51,12 @@ def init_app(test_config=None):
         else:
             print("\n[!] Password did not match\n")
 
-    # API entrypoint
+    # api router
     app.register_blueprint(upload_api.upload_endpoint)
-
-    # error handler
     app.register_blueprint(error_api.error_endpoint)
 
-    # main entrypoint
+    # web router
+    app.register_blueprint(web_error.web_error)
     app.register_blueprint(main)
-
-    app.config.get("UPLOAD_FOLDER")
 
     return app
