@@ -23,7 +23,7 @@ CORS(upload_endpoint)
 
 @upload_endpoint.route("/upload", methods=["POST"])
 @verify_token
-def file_upload():
+def file_upload(token):
     try:
         fileup = request.files["file"]
 
@@ -32,12 +32,35 @@ def file_upload():
 
         if fileup and file_validator(fileup.filename):
             filename = secure_filename(file_renamer(fileup.filename))
-
-            fileup.save(
+            reporter_account_folder = os.path.isdir(
                 os.path.join(
-                    os.path.abspath(current_app.config["UPLOAD_FOLDER"]), filename
+                    os.path.abspath(current_app.config["UPLOAD_FOLDER"]), token
                 )
             )
+
+            if reporter_account_folder:
+                fileup.save(
+                    os.path.join(
+                        os.path.abspath(current_app.config["UPLOAD_FOLDER"]),
+                        token,
+                        filename,
+                    )
+                )
+
+            else:
+                os.mkdir(
+                    os.path.join(
+                        os.path.abspath(current_app.config["UPLOAD_FOLDER"]), token
+                    )
+                )
+
+                fileup.save(
+                    os.path.join(
+                        os.path.abspath(current_app.config["UPLOAD_FOLDER"]),
+                        token,
+                        filename,
+                    )
+                )
 
             return jsonify({"saved": True, "time": datetime.datetime.now()})
 

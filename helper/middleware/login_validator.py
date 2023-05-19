@@ -13,7 +13,11 @@ def login_required(function):
     def verify_login(*args, **kwargs):
         if "wid" in session:
             user_data = User.query.get(session.get("wid"))
-            return function({"username": user_data.username}, *args, **kwargs)
+            return function(
+                {"username": user_data.username, "token": user_data.token},
+                *args,
+                **kwargs
+            )
 
         else:
             flash("Please login first", "error")

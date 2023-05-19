@@ -9,6 +9,8 @@ from flask import url_for
 import msgpack
 import os
 
+import datetime
+
 from flask_cors import CORS
 
 from helper.middleware.login_validator import login_required
@@ -35,13 +37,25 @@ def bytes_humanizer(s):
 
 
 # @main.route("/test")
-# def testing():
-#     testing = sorted(
-#         os.listdir(os.path.join(current_app.config.get("UPLOAD_FOLDER"))), reverse=True
-#     )
+# @login_required
+# def testing(account):
 #     try:
+#         testing = sorted(
+#             os.listdir(
+#                 os.path.join(
+#                     current_app.config.get("UPLOAD_FOLDER"), account.get("token")
+#                 )
+#             ),
+#             reverse=True,
+#         )
+
 #         with open(
-#             os.path.join(current_app.config.get("UPLOAD_FOLDER"), testing[0]), "rb"
+#             os.path.join(
+#                 current_app.config.get("UPLOAD_FOLDER"),
+#                 account.get("token"),
+#                 testing[0],
+#             ),
+#             "rb",
 #         ) as test:
 #             raw_content = test.read()
 
@@ -80,12 +94,31 @@ def login():
 @login_required
 def index(account):
     users = User.query.all()
-    log_data = sorted(
-        os.listdir(os.path.join(current_app.config.get("UPLOAD_FOLDER"))), reverse=True
-    )
+
     try:
+        log_data = sorted(
+            os.listdir(
+                os.path.join(
+                    current_app.config.get("UPLOAD_FOLDER"), account.get("token")
+                )
+            ),
+            reverse=True,
+        )
+
+        # To-Do:
+        # add log history
+        testing = [ts.split("_") for ts in log_data]
+        test2 = f"{testing[0][3]}{testing[0][4].split('.')[0]}"
+        coba = datetime.datetime.strptime(test2, "%Y%m%d%H%M%S%z")
+        print(coba.second)
+
         with open(
-            os.path.join(current_app.config.get("UPLOAD_FOLDER"), log_data[0]), "rb"
+            os.path.join(
+                current_app.config.get("UPLOAD_FOLDER"),
+                account.get("token"),
+                log_data[0],
+            ),
+            "rb",
         ) as test:
             raw_content = test.read()
 
@@ -94,7 +127,12 @@ def index(account):
             "template/admin/index.html", account=account, content=content, user=users
         )
 
-    except (IndexError, msgpack.exceptions.ExtraData, msgpack.exceptions.FormatError):
+    except (
+        IndexError,
+        FileNotFoundError,
+        msgpack.exceptions.ExtraData,
+        msgpack.exceptions.FormatError,
+    ):
         return render_template("template/admin/index.html", account=account, user=users)
 
 
