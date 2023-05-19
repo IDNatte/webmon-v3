@@ -17,7 +17,12 @@ from helper.middleware.login_validator import login_required
 from helper.security.password_module import check_passwd
 
 from helper.filter.datetime_filter import datetime_costume_filter
+from helper.filter.filename_readable import log_filename_readable
+from helper.filter.datetime_filter import datetime_server_filter
+from helper.filter.log_url_maker import logfile_urlmaker
 from helper.filter.bites_readable import format_bytes
+
+from helper.utils import filename_reverse
 
 from model import User
 
@@ -31,9 +36,24 @@ def datetime_converter(s):
     return datetime_costume_filter(s)
 
 
+@main.app_template_filter("datetime_sv_convert")
+def datetiem_srv_convert(s):
+    return datetime_server_filter(s)
+
+
 @main.app_template_filter("readable_bytes")
 def bytes_humanizer(s):
     return format_bytes(s)
+
+
+@main.app_template_filter("logname_readable")
+def logname_readable(s):
+    return log_filename_readable(s)
+
+
+@main.app_template_filter("logfile_url_maker")
+def log_file_url_maker(s):
+    return logfile_urlmaker(s)
 
 
 # @main.route("/test")
@@ -105,13 +125,6 @@ def index(account):
             reverse=True,
         )
 
-        # To-Do:
-        # add log history
-        testing = [ts.split("_") for ts in log_data]
-        test2 = f"{testing[0][3]}{testing[0][4].split('.')[0]}"
-        coba = datetime.datetime.strptime(test2, "%Y%m%d%H%M%S%z")
-        print(coba.second)
-
         with open(
             os.path.join(
                 current_app.config.get("UPLOAD_FOLDER"),
@@ -119,12 +132,16 @@ def index(account):
                 log_data[0],
             ),
             "rb",
-        ) as test:
-            raw_content = test.read()
+        ) as binary:
+            raw_content = binary.read()
 
             content = msgpack.unpackb(raw_content)
         return render_template(
-            "template/admin/index.html", account=account, content=content, user=users
+            "template/admin/index.html",
+            history=log_data,
+            account=account,
+            content=content,
+            user=users,
         )
 
     except (
@@ -134,6 +151,34 @@ def index(account):
         msgpack.exceptions.FormatError,
     ):
         return render_template("template/admin/index.html", account=account, user=users)
+
+
+@main.route("/log_history/<log_file>")
+@login_required
+def read_history(account, log_file):
+    users = User.query.all()
+    filename_reverse(log_file)
+    try:
+        # with open(current_app.config.get("UPLOAD_FOLDER"), account.get("token"))
+        return render_template(
+            "template/log_history/index.html",
+            account=account,
+            user=users,
+            ptime=log_file,
+        )
+
+    except (
+        IndexError,
+        FileNotFoundError,
+        msgpack.exceptions.ExtraData,
+        msgpack.exceptions.FormatError,
+    ):
+        return render_template(
+            "template/log_history/index.html",
+            account=account,
+            user=users,
+            ptime=log_file,
+        )
 
 
 @main.route("/logout")

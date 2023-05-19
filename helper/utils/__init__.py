@@ -23,3 +23,10 @@ def auth_header_parser(headers):
             raise AuthApiError("TOKENError", "Missing token", 401)
     else:
         raise AuthApiError("TOKENError", "Broken Authorization header", 401)
+
+
+def filename_reverse(string):
+    # print(list(string)[:8])
+    # print(list(string)[8:])
+
+    return {"testing": True}
