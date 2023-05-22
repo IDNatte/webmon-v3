@@ -201,6 +201,8 @@
                     <tr>
                       <th scope="col">pid</th>
                       <th scope="col">name</th>
+                      <th scope="col">Local IP</th>
+                      <th scope="col">Local Port</th>
                       <th scope="col">Remote IP</th>
                       <th scope="col">Remote Port</th>
                     </tr>
@@ -210,6 +212,8 @@
                     <tr>
                       <th scope="row"><a href="#">{{c.pid}}</a></th>
                       <td>{{c.proc_name}}</td>
+                      <td>{{c.address.local_address}}</td>
+                      <td>{{c.address.local_port}}</td>
                       <td>{{c.address.remote_address}}</td>
                       <td>{{c.address.remote_port}}</td>
                     </tr>
