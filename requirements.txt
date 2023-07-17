@@ -16,7 +16,7 @@ msgpack==1.0.5
 passlib==1.7.4
 PyMySQL==1.0.3
 six==1.16.0
-SQLAlchemy==2.0.15
+SQLAlchemy==2.0.19
 typing_extensions==4.6.2
 Werkzeug==2.3.4
 zipp==3.15.0
