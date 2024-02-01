@@ -57,6 +57,6 @@ def init_app(test_config=None):
 
     # web router
     app.register_blueprint(web_error.web_error)
-    app.register_blueprint(main)
+    app.register_blueprint(main.main)
 
     return app
