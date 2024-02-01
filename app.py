@@ -4,7 +4,7 @@ from flask import Flask
 from getpass import getpass
 
 import click
-import json
+import toml
 
 # web module
 from controller import web_error
@@ -23,7 +23,7 @@ from model import User
 
 def init_app(test_config=None):
     app = Flask(__name__, instance_relative_config=False)
-    app.config.from_file("./config/config.json", load=json.load)
+    app.config.from_file("./config/config.toml", load=toml.load)
 
     # database initializer
     DB.init_app(app)

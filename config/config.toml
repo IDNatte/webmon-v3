@@ -1,4 +1,4 @@
-SECRET_KEY = "c5a5b02706891259dcd0332ea092a8b8d6fbd7df97a73240a5bfe41a0be6c751"
+SECRET_KEY = "python -c 'import secrets; print(secrets.token_hex())'"
 SQLALCHEMY_TRACK_MODIFICATIONS = false
 UPLOAD_FOLDER = "./storage"
 MAX_CONTENT_LENGTH = 109951162777600
