@@ -1,9 +1,9 @@
 from flask import request
 from functools import wraps
 
-from helper.utils import auth_header_parser
+from helper.utils.utils_helper import auth_header_parser
 from helper.error.auth_error import AuthApiError
-from model import User
+from model.user import User
 
 
 def verify_token(function):

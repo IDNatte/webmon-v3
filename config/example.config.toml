@@ -1,0 +1,13 @@
+SECRET_KEY = "python -c 'import secrets; print(secrets.token_hex())'"
+SQLALCHEMY_TRACK_MODIFICATIONS = false
+UPLOAD_FOLDER = "./storage"
+MAX_CONTENT_LENGTH = 109951162777600
+
+# database config mysql
+# SQLALCHEMY_DATABASE_URI = "mysql+pymysql://(user):(password)@(hosy)/(database)"
+
+# database config mariadb
+#SQLALCHEMY_DATABASE_URI = "mariadb+mariadbconnector://(user):(password)@(hosy)/(database)"
+
+
+ALLOWED_EXTENSIONS = ["slg"]

@@ -16,9 +16,9 @@ from controller.api import error_api
 
 # database stuff module
 from helper.security.password_module import create_password
-from helper.constant import DB
-from model import ReportLog
-from model import User
+from helper.constant.constant import DB
+from model.report import ReportLog
+from model.user import User
 
 
 def init_app(test_config=None):

@@ -5,7 +5,8 @@ from flask import redirect
 from flask import request
 from flask import session
 from flask import url_for
-from flask import jsonify
+
+# from flask import jsonify
 import msgpack
 import os
 
@@ -17,8 +18,8 @@ from helper.filter.datetime_filter import datetime_costume_filter
 from helper.filter.filename_readable import log_filename_readable
 from helper.filter.bites_readable import format_bytes
 
-from model import ReportLog
-from model import User
+from model.report import ReportLog
+from model.user import User
 
 main = Blueprint("main", __name__)
 
@@ -55,39 +56,6 @@ def login():
             return render_template("template/login/index.html", error=error)
     else:
         return render_template("template/login/index.html")
-
-
-# @main.route("/test")
-# @login_required
-# def test(account):
-#     log_content_lists = (
-#         ReportLog.query.join(User)
-#         .filter(User.token == account.get("token"))
-#         .order_by(ReportLog.uploaded.desc())
-#         .all()
-#     )
-
-#     try:
-#         with open(
-#             os.path.join(
-#                 current_app.config.get("UPLOAD_FOLDER"),
-#                 account.get("storage"),
-#                 log_content_lists[0].filename,
-#             ),
-#             "rb",
-#         ) as binary:
-#             raw_content = binary.read()
-
-#             content = msgpack.unpackb(raw_content)
-#         return jsonify(content)
-
-#     except (
-#         IndexError,
-#         FileNotFoundError,
-#         msgpack.exceptions.ExtraData,
-#         msgpack.exceptions.FormatError,
-#     ):
-#         return jsonify({"error": "error"})
 
 
 @main.route("/")

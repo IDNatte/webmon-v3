@@ -1,7 +1,7 @@
-from helper.constant import DB
+from helper.constant.constant import DB
 
-from helper.database import random_id_generator
-from helper.database import token_generator
+from helper.database.database_helper import random_id_generator
+from helper.database.database_helper import token_generator
 
 
 class User(DB.Model):

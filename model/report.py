@@ -1,10 +1,7 @@
-from helper.constant import DB
-
-from helper.database import random_id_generator
-from helper.database import token_generator
-
 from sqlalchemy import func
 
+from helper.database.database_helper import random_id_generator
+from helper.constant.constant import DB
 
 
 class ReportLog(DB.Model):

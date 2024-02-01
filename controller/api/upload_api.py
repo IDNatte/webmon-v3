@@ -13,11 +13,11 @@ from flask_cors import CORS
 
 from helper.middleware.token_validator import verify_token
 from helper.validator.file_validator import file_validator
-from helper.utils import file_renamer
+from helper.utils.utils_helper import file_renamer
 
-from helper.constant import DB
-from model import ReportLog
-from model import User
+from helper.constant.constant import DB
+from model.report import ReportLog
+from model.user import User
 
 upload_endpoint = Blueprint("upload_api", __name__)
 

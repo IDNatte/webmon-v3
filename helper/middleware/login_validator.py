@@ -5,7 +5,7 @@ from flask import flash
 from flask import abort
 from functools import wraps
 
-from model import User
+from model.user import User
 
 
 def login_required(function):
